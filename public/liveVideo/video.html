@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>监控直播</title>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.json-2.4.min.js"></script>
+    <script type="text/javascript" src="./js/jmegaeyes-1.0.js"></script>
+
+
+    <style type="text/css">
+        html,
+        body,
+        .video-wrapper {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper .monitor-list-warp {
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-wrapper .monitor-list-warp .video-warp {
+            float: left;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .video-wrapper .video-box {
+            width: 100%;
+            height: 100%;
+            background: #1c254a;
+        }
+
+        .video-wrapper .video-warp p {
+            margin-left: 20px;
+            line-height: 30px;
+            color: #fff;
+        }
+
+        .video-wrapper .video-warp .full-screen {
+            position: absolute;
+            right: 2px;
+            bottom: 1px;
+            width: 25px;
+            height: 25px;
+            /*background: url(../../images/video-monitor/full-screen.png) no-repeat center;*/
+        }
+
+        .video-wrapper .video-warp .close-video {
+            position: absolute;
+            right: 35px;
+            bottom: 1px;
+            width: 25px;
+            height: 25px;
+            /*background: url(../../images/video-monitor/video-close1.png) no-repeat center;*/
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+
+<body class="video-wrapper">
+    <div id="sessionPlugin" style="height:0px;"></div>
+    <!--视频直播容器,id可以自己定义-->
+    <div class="monitor-list-warp rel">
+        <div class="video-warp rel">
+            <div id="videoBox0" class="video-box">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hasActiveXObject() {
+            if ((window.ActiveXObject || 'ActiveXObject' in window)) {
+                return true;
+            }
+            return false;
+        }
+        var theApp = {};
+        
+        //window.postMessage('111','*')
+        window.addEventListener('message',function(e){
+          //alert(e.data.id)
+            
+        //alert(flag)
+          
+          if(hasActiveXObject()){
+            //$('#sessionPlugin').show()
+                //$('#videoBox0').show()
+
+            theApp.Session = new JMegaeyes.Session();
+            theApp.Session.createPlugin("sessionPlugin");
+
+            
+            var config = {
+                hostIp: "60.174.206.57",
+                hostPort: "8181",
+                hthxName: "341823",
+                hthxPwd: "123456"
+            }
+            
+            if(theApp.Session.loginToPlatform(config.hostIp, config.hostPort, config.hthxName, config.hthxPwd)) {
+                //flag = false
+                //alert("登录成功！会话标识：" + theApp.Session.getSessionID() + "。");          
+            }
+            
+            if(e.data.id){
+                
+                
+                //创建RealPlayer对像
+                theApp.Player = new JMegaeyes.RealPlayer();
+                theApp.Player.createPlugin("videoBox0", 960, 471);
+                
+    
+                //theApp.isFullScreen = false; //是否全屏模式
+                //theApp.picturePath = ""; //抓拍照片的存放路径
+                    //alert(111)
+                    theApp.Session.queryAllDevices(function(orgs, devs){
+                    //alert(e.data.id)
+                    var setting = theApp.Session.getSysSetting();
+                    theApp.Player.setSysSetting(setting);
+                    var ret = theApp.Player.play(e.data.id);
+                    if(ret){
+                        //alert("播放实时视频成功！");
+                        //theApp.Session.removePlugin();
+                        
+                    }else{
+                        //alert("播放实时视频失败！");
+                        //theApp.Session.removePlugin();
+                    }
+                })
+                    
+                } else {
+                    alert('close')
+                    //flag = true
+                    theApp.Session.removePlugin();
+                    
+                }
+            
+            
+            }
+            
+  
+            
+        },false)
+        
+        $(window).unload(function() {
+	        //theApp.Session.removePlugin();
+        });
+        
+    </script>
+
+</body>
+
+</html>

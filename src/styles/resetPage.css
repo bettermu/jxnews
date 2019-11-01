@@ -1,0 +1,23 @@
+
+
+.search .select-wrap .el-select .el-input__inner {
+  border:none;
+  height:64px;
+  width:189px;
+  line-height:64px;
+  border-right:1px solid #ccc;
+  border-top-left-radius: 32px;
+  border-bottom-left-radius: 32px;
+  text-align:center;
+  font-size:18px;
+  color:#333;
+}
+
+.search .input-wrap .el-input>.el-input__inner {
+  border:none;
+  height:64px;
+  line-height:64px;
+  font-size:18px;
+} 
+
+
